@@ -32,9 +32,9 @@ public class IntroActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable(){
                     @Override
                     public void run(){
-                        //Intent i = new Intent(IntroActivity.this, LoginActivity.class);
-                        //startActivity(i);
-                        //finish();
+                        Intent i = new Intent(IntroActivity.this, LoginActivity.class);
+                        startActivity(i);
+                        finish();
                     }
                 },3000);
             }

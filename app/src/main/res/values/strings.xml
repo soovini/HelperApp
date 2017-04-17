@@ -6,6 +6,9 @@
     <string name="hint_id">아이디를 입력해 주세요</string>
     <string name="hint_pw">비밀번호를 입력해 주세요</string>
 
+    <string name="hint_pw2">비밀번호를 다시 한번 입력해 주세요</string>
+
+    <string name="hint_name">이름을 입력해 주세요</string>
     <string name="my_point"><u>나의포인트내역</u></string>
 
     <string name="header">Emulate NFC Forum Type-4 tag</string>

@@ -80,8 +80,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.tv_signup :
-                //Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(intent);
             break;
 
         }

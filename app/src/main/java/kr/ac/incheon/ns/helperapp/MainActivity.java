@@ -95,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
         btn_mypoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent i = new Intent(MainActivity.this, MyPointActivity.class);
-                //startActivity(i);
+                Intent i = new Intent(MainActivity.this, MyPointActivity.class);
+                startActivity(i);
             }
         });
 

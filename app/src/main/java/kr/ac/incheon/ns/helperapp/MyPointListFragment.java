@@ -10,10 +10,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import kr.ac.incheon.ns.helperapp.model.PointInfoItem;
+import kr.ac.incheon.ns.helperapp.utility.Log;
 import kr.ac.incheon.ns.helperapp.utility.Preference;
+import kr.ac.incheon.ns.helperapp.utility.ServerUrl;
+import kr.ac.incheon.ns.helperapp.volly.GsonPostRequest;
 
 
 /**
@@ -49,9 +60,80 @@ public class MyPointListFragment extends ListFragment implements SwipeRefreshLay
         return mRootView;
     }
 
+    private RequestQueue mQueue;
+    private List<PointInfoItem.Point> mList = new ArrayList<PointInfoItem.Point>();
+    private GsonPostRequest<PointInfoItem> postRequest;
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onActivityCreated(savedInstanceState);
+
+        mQueue = MyApp.getInstance().getRequestQueue();
+
+        mAdapter = new PointListAdapter(getActivity(), mList);
+        getListView().setAdapter(mAdapter);
+        //getListView().setOnItemClickListener(this);
+
+        loadPage();
+
+    }
+
+    private void loadPage() {
+        String url = ServerUrl.urlMaker("getMyPointList.php");
+
+        Map<String, String> params = new HashMap<String, String>();
+        String get_id = Preference.getValue(getActivity().getApplicationContext(),"id","");
+        params.put("id", get_id);
+
+        mList.clear();
+        mQueue.stop();
+
+        postRequest = new GsonPostRequest<PointInfoItem>(Request.Method.POST,
+                url,
+                PointInfoItem.class,
+                params,
+                null,
+                createMyReqSuccessListener(),
+                createMyReqErrorListener());
+
+        mQueue.add(postRequest);
+        mQueue.start();
+    }
+
+    // 통신 후 발생하는 이벤트
+    private Response.Listener<PointInfoItem> createMyReqSuccessListener() {
+        return new Response.Listener<PointInfoItem>() {
+            @Override
+            public void onResponse(PointInfoItem response) {
+                int size = response.getPoint().size();
+                for(int i = 0 ; i < size ; i++) {
+                    mList.add(response.getPoint().get(i));
+                }
+
+                mAdapter.notifyDataSetChanged();
+                setRefreshing(false);
+
+            }
+        };
+    }
+
+    private Response.ErrorListener createMyReqErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(error.getMessage());
+                Log.showToast(error.getMessage());
+                setRefreshing(false);
+            }
+        };
+    }
+    public void setRefreshing(boolean refreshing) {
+        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(refreshing);
+    }
+
     @Override
     public void onRefresh() {
-
+        loadPage();
     }
 
     public class PointListAdapter extends BaseAdapter {

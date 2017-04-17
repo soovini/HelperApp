@@ -16,5 +16,6 @@ public class MyPointActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frg_container, fragment).commit();
 
+
     }
 }
